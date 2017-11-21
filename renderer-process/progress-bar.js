@@ -27,6 +27,7 @@ $('.progress-bar').on('mousedown', (event) => {
 $('body').on('mouseup', (event) => {
     progressBarRect = null
     video = null
+    console.table(marks)
 })
 
 $('body').on('mousemove', (event) => {
@@ -60,13 +61,29 @@ function addController(id, pageX) {
     $(`#ctrl-${id}`).dblclick(()=>{
         $(`#ctrl-${id}`).remove();
     })
+
+    marks.push(mark(id, pageX))
 }
 
 function updateController(id, pageX) {
     $(`#ctrl-${id}`).css("left", pageX - vh(2))
 }
 
-function mark() {}
+function mark(id, pageX) {
+    var time = space2time(pageX)
+    return {
+        'id': id,
+        'span': {
+            'start': time,
+            'loopStart': time,
+            'end': time
+        },
+        'event': [{
+            'block': [0, 0, 0, 0],
+            'action': 'click'
+        }]
+    }
+}
 
 function vh(numb) {
     return $(window).height() * (numb) / 100.0;
@@ -81,18 +98,18 @@ function updateVideo(event) {
 
 /**
  * 将进度条横轴的某点currentX转换成某段时间的时间点
- * @param {pageX} currentX 当前所在空间点
+ * @param {pageX} pageX 当前所在空间点
  * @param {间距} space 间距总长度
  * @param {时间总长度} duration  时间总长度
  */
-function space2time(currentX, space, duration) {
+function space2time(pageX, space, duration) {
     var start = space.left
     var end = space.right
-    if (currentX < start) {
+    if (pageX < start) {
         return 0;
-    } else if (currentX > end) {
+    } else if (pageX > end) {
         return duration;
     } else {
-        return (currentX - start) / (end - start) * duration;
+        return (pageX - start) / (end - start) * duration;
     }
 }
