@@ -27,7 +27,7 @@
 .controller-container {
     width: 100vw;
     height: 20vh;
-    background-color: #0000ff;
+    background-color: #eee;
 }
 
 .controller-container .progress-bar {
@@ -48,65 +48,84 @@
     margin-top: 3vh;
 }
 
-.controller-container .ctrl .inverted-triangle {
+.controller-container .ctrl .middle {
+    position: absolute;
+    width: 4vh;
+    height: 100%;
+    right: 0;
+}
+
+.controller-container .ctrl .middle .triangle {
     width: 0;
     height: 0;
     border-left: 2vh solid transparent;
     border-right: 2vh solid transparent;
-    border-top: 3vh solid rgb(6, 247, 106);
+    border-top: 3vh solid green;
+    margin-top: 1px;
     box-sizing: border-box;
 }
 
-.controller-container .ctrl .line {
+
+.controller-container .ctrl .middle .line {
     width: 1px;
     height: 3vh;
-    margin: 0 auto;
-    background: #000;
+    margin: -0.5px auto;
+    background: green;
 }
 
-.controller-container .ctrl .cmd-circle {
+.controller-container .ctrl .middle .circle {
     width: 4vh;
     height: 4vh;
-    background: #899;
+    background: green;
     border-radius: 2vh;
 }
 
-.controller-container .left {
+.controller-container .ctrl .left {
     position: absolute;
     width: 4vh;
     height: 3vh;
+    top: 0;
+    left: 0;
 }
 
-.controller-container .left-triangle {
+.controller-container .ctrl .left .triangle {
     position: absolute;
     width: 0;
     height: 0;
-    border-bottom: 3vh solid black;
+    border-bottom: 3vh solid red;
     border-right: 2vh solid transparent;
-    margin-top: 3vh;
 }
 
-.controller-container .right {
+.controller-container .ctrl .left .line{
+    width: 1px;
+    height: 3vh;
+    margin-left: 2vh;
+    margin-top: 3vh;
+    background: red;
+}
+
+.controller-container .ctrl .right {
     position: absolute;
     width: 4vh;
     height: 3vh;
+    top: 0;
+    right: 0;
 }
 
-.controller-container .right .right-triangle {
+.controller-container .ctrl .right .triangle {
     position: absolute;
     width: 0;
     height: 0;
     border-left: 2vh solid transparent;
-    border-bottom: 3vh solid red;
+    border-bottom: 3vh solid blue;
     margin-left: 2vh;
-    margin-top: 3vh;
 }
 
-.controller-container .right .line{
+.controller-container .ctrl .right .line{
     width: 1px;
     height: 3vh;
     margin-left: 2vh;
-    margin-top: 6vh;
-    background: rgb(248, 5, 127);
+    margin-top: 3vh;
+    background: blue;
 }
 

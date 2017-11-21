@@ -4,6 +4,7 @@ var progressBarRect = null
 var video = null
 
 var marks = []
+var cnt = 0
 
 $('.progress-bar').on('mousedown', (event) => {
 
@@ -13,8 +14,14 @@ $('.progress-bar').on('mousedown', (event) => {
         'right': offset.left + $('.progress-bar').width()
     }
     video = $('#palyer')[0]
-   
+
     updateVideo(event);
+
+    if ($('#ctrl-0').length) {
+        updateController(0, event.pageX)
+    } else {
+        addController(0, event.pageX)
+    }
 })
 
 $('body').on('mouseup', (event) => {
@@ -28,7 +35,7 @@ $('body').on('mousemove', (event) => {
 
 
 function addMark(pX) {
-    for (var i=0; i<marks.length; i++){
+    for (var i = 0; i < marks.length; i++) {
         var mark = marks[i]
         var t = space2time(pX)
         if (mark.span.start < t && mark.span.end) {
@@ -37,7 +44,33 @@ function addMark(pX) {
     }
 }
 
+function addController(id, pageX) {
+    $('.controller-container').append(`<div id='ctrl-${id}' class='ctrl'></div>`)
+    $(`#ctrl-${id}`).append(`<div class='middle'></div>`)
+    $(`#ctrl-${id}`).find('.middle').append(`<div class='triangle'></div>`);
+    $(`#ctrl-${id}`).find('.middle').append(`<div class='line'></div>`);
+    $(`#ctrl-${id}`).find('.middle').append(`<div class='circle'></div>`);
+    $(`#ctrl-${id}`).append(`<div class='left'></div>`)
+    $(`#ctrl-${id}`).find('.left').append(`<div class='triangle'></div>`)
+    $(`#ctrl-${id}`).find('.left').append(`<div class='line'></div>`)
+    $(`#ctrl-${id}`).append(`<div class='right'></div>`)
+    $(`#ctrl-${id}`).find('.right').append(`<div class='triangle'></div>`)
+    $(`#ctrl-${id}`).find('.right').append(`<div class='line'></div>`)
+    $(`#ctrl-${id}`).css("left", pageX - vh(2))
+    $(`#ctrl-${id}`).dblclick(()=>{
+        $(`#ctrl-${id}`).remove();
+    })
+}
 
+function updateController(id, pageX) {
+    $(`#ctrl-${id}`).css("left", pageX - vh(2))
+}
+
+function mark() {}
+
+function vh(numb) {
+    return $(window).height() * (numb) / 100.0;
+}
 
 function updateVideo(event) {
     if (progressBarRect == null || video == null || video == undefined) {
