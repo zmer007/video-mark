@@ -27,7 +27,7 @@ $('.progress-bar').on('mousedown', (event) => {
 $('body').on('mouseup', (event) => {
     progressBarRect = null
     video = null
-    console.table(marks)
+    // console.table(marks)
 })
 
 $('body').on('mousemove', (event) => {
@@ -38,7 +38,7 @@ $('body').on('mousemove', (event) => {
 function addMark(pX) {
     for (var i = 0; i < marks.length; i++) {
         var mark = marks[i]
-        var t = space2time(pX)
+        var t = space2time(pX, progressBarRect, video.duration)
         if (mark.span.start < t && mark.span.end) {
             return;
         }
@@ -46,23 +46,33 @@ function addMark(pX) {
 }
 
 function addController(id, pageX) {
+    marks.push(mark(id, pageX))
     $('.controller-container').append(`<div id='ctrl-${id}' class='ctrl'></div>`)
-    $(`#ctrl-${id}`).append(`<div class='middle'></div>`)
-    $(`#ctrl-${id}`).find('.middle').append(`<div class='triangle'></div>`);
-    $(`#ctrl-${id}`).find('.middle').append(`<div class='line'></div>`);
-    $(`#ctrl-${id}`).find('.middle').append(`<div class='circle'></div>`);
-    $(`#ctrl-${id}`).append(`<div class='left'></div>`)
-    $(`#ctrl-${id}`).find('.left').append(`<div class='triangle'></div>`)
-    $(`#ctrl-${id}`).find('.left').append(`<div class='line'></div>`)
-    $(`#ctrl-${id}`).append(`<div class='right'></div>`)
-    $(`#ctrl-${id}`).find('.right').append(`<div class='triangle'></div>`)
-    $(`#ctrl-${id}`).find('.right').append(`<div class='line'></div>`)
-    $(`#ctrl-${id}`).css("left", pageX - vh(2))
-    $(`#ctrl-${id}`).dblclick(()=>{
-        $(`#ctrl-${id}`).remove();
+    var ctrl = $(`#ctrl-${id}`)
+    ctrl.append(`<div class='middle'></div>`)
+    ctrl.find('.middle').append(`<div class='triangle'></div>`);
+    ctrl.find('.middle').append(`<div class='line'></div>`);
+    ctrl.find('.middle').append(`<div class='circle'></div>`);
+    ctrl.append(`<div class='left'></div>`)
+    ctrl.find('.left').append(`<div class='triangle'></div>`)
+    ctrl.find('.left').append(`<div class='line'></div>`)
+    ctrl.append(`<div class='right'></div>`)
+    ctrl.find('.right').append(`<div class='triangle'></div>`)
+    ctrl.find('.right').append(`<div class='line'></div>`)
+    ctrl.css("left", pageX - vh(2))
+    
+    ctrl.dblclick(()=>{
+        ctrl.remove();
     })
 
-    marks.push(mark(id, pageX))
+    ctrl.on('mousedown', (event) => {
+        // ctrl.css('width', ctrl.width() + vh(2))
+        // ctrl.css('left', event.pageX - vh(2))
+    })
+
+    ctrl.on('mousemove', (event) => {
+        ctrl.css('left', event.pageX)
+    })
 }
 
 function updateController(id, pageX) {
@@ -70,7 +80,7 @@ function updateController(id, pageX) {
 }
 
 function mark(id, pageX) {
-    var time = space2time(pageX)
+    var time = space2time(pageX, progressBarRect, video.duration)
     return {
         'id': id,
         'span': {
