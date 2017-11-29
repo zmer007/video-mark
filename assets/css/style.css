@@ -50,6 +50,7 @@
 
 .controller-container .ctrl .middle {
     position: absolute;
+    pointer-events: none;
     width: 4vh;
     height: 100%;
     right: 0;
@@ -82,6 +83,7 @@
 
 .controller-container .ctrl .left {
     position: absolute;
+    pointer-events: none;
     width: 4vh;
     height: 3vh;
     top: 0;
@@ -106,6 +108,7 @@
 
 .controller-container .ctrl .right {
     position: absolute;
+    pointer-events: none;
     width: 4vh;
     height: 3vh;
     top: 0;
