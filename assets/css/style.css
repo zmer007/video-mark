@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+body {
+    overflow-y: hidden;
+}
+
 .mobile-frame {
     text-align: center;
     padding: 5px;
@@ -51,34 +55,13 @@
 .controller-container .ctrl .middle {
     position: absolute;
     pointer-events: none;
-    width: 4vh;
-    height: 100%;
-    right: 0;
-}
-
-.controller-container .ctrl .middle .triangle {
-    width: 0;
-    height: 0;
-    border-left: 2vh solid transparent;
-    border-right: 2vh solid transparent;
-    border-top: 3vh solid green;
-    margin-top: 1px;
-    box-sizing: border-box;
-}
-
-
-.controller-container .ctrl .middle .line {
     width: 1px;
-    height: 3vh;
-    margin: -0.5px auto;
+    height: 40%;
+    left: 0;
+    margin-right: 1.9vh;
+    margin-left: 2vh;
+    margin-top: 2vh;
     background: green;
-}
-
-.controller-container .ctrl .middle .circle {
-    width: 4vh;
-    height: 4vh;
-    background: green;
-    border-radius: 2vh;
 }
 
 .controller-container .ctrl .left {
