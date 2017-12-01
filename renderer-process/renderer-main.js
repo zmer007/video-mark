@@ -7,17 +7,19 @@ var video = null
 
 var cnt = 0
 
-var currentBlock = null,
-    middleCtrl = null;
+var currentBlock = null;
+var middleCtrl = null;
+
 var blockBound, blockX, blockY;
 var blockOriginWith;
 var onLeftCtrl, onRightCtrl, onMiddleCtrl;
-var deltaLeft, deltaRight;
-var downX;
+var ctrlLeftDelta, ctrlRightDelta;
 
 var progressBar = null;
 var progressBarRect = null;
-var e;
+
+var downX;
+var event;
 
 var ctrlID = 0;
 
@@ -74,7 +76,7 @@ function onTouchEnd(e) {
 
 function onMove(ee) {
     clac(ee);
-    e = ee;
+    event = ee;
     redraw = true;
 }
 
@@ -92,12 +94,12 @@ function animate() {
     if (!currentBlock) return;
 
     if (onLeftCtrl) {
-        var currentWidth = Math.max(downX - e.clientX + blockOriginWith, utils.vh(4));
+        var currentWidth = Math.max(downX - event.clientX + blockOriginWith, utils.vh(4));
         if (currentWidth >= utils.vh(4)) {
             middleCtrl.style.left = '0px';
             currentBlock.style.width = currentWidth + 'px';
-            currentBlock.style.left = e.clientX + deltaLeft + 'px';
-            var spanStart = e.clientX + deltaLeft + utils.vh(2)
+            currentBlock.style.left = event.clientX + ctrlLeftDelta + 'px';
+            var spanStart = event.clientX + ctrlLeftDelta + utils.vh(2)
             marks.getActivedMark().span.start = spanStart;
             marks.getActivedMark().span.loopStart = spanStart
             updateVideo(spanStart);
@@ -105,8 +107,8 @@ function animate() {
     }
 
     if (onRightCtrl) {
-        currentBlock.style.width = Math.max(blockX + deltaRight, utils.vh(4)) + 'px';
-        var spanEnd = e.clientX - utils.vh(2) + deltaRight;;
+        currentBlock.style.width = Math.max(blockX + ctrlRightDelta, utils.vh(4)) + 'px';
+        var spanEnd = event.clientX - utils.vh(2) + ctrlRightDelta;;
         marks.getActivedMark().span.end = spanEnd;
         updateVideo(spanEnd);
     }
@@ -114,15 +116,15 @@ function animate() {
 
     if (onMiddleCtrl) {
         middleCtrl.style.left = blockX - utils.vh(2) + 'px';
-        marks.getActivedMark().span.loopStart = e.clientX;
-        updateVideo(e.clientX);
+        marks.getActivedMark().span.loopStart = event.clientX;
+        updateVideo(event.clientX);
     }
 }
 
 function onDown(e) {
     if (e.target === progressBar[0]) {
         addController(ctrlID++, e.pageX);
-        video = $("#palyer")[0];
+        video = $(".palyer")[0];
     }
 }
 
@@ -149,8 +151,8 @@ function addController(id, pageX) {
         middleCtrl = ctrl.find('.middle')[0];
         clac(e);
         downX = e.clientX;
-        deltaLeft = blockBound.left - e.clientX;
-        deltaRight = blockBound.right - e.clientX;
+        ctrlLeftDelta = blockBound.left - e.clientX;
+        ctrlRightDelta = blockBound.right - e.clientX;
         blockOriginWith = blockBound.width;
         e.preventDefault();
     })
