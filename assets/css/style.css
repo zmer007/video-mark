@@ -73,22 +73,6 @@ body {
     left: 0;
 }
 
-.controller-container .ctrl .left .triangle {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-bottom: 3vh solid red;
-    border-right: 2vh solid transparent;
-}
-
-.controller-container .ctrl .left .line{
-    width: 1px;
-    height: 3vh;
-    margin-left: 2vh;
-    margin-top: 3vh;
-    background: red;
-}
-
 .controller-container .ctrl .right {
     position: absolute;
     pointer-events: none;
