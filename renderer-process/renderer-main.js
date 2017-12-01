@@ -41,7 +41,8 @@ $(() => {
 
     $('#export').click(() => {
         // ipc.send('save-file', data.getData())
-        console.log(JSON.stringify(marks.getData()));
+        console.log(progressBarRect)
+        console.log(JSON.stringify(marks.getMarks()));
     });
 
     $(window).resize(() => {
