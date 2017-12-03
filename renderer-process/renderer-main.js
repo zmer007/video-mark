@@ -64,9 +64,7 @@ $(() => {
 
 
 	$('#export').click(() => {
-		// ipc.send('save-file', data.getData())
-		console.log(progressBarRect)
-		console.log(JSON.stringify(marks.getMarks()));
+		ipc.send('save-file', marks.getMarks())
 	});
 
 	$(window).resize(() => {
@@ -116,74 +114,79 @@ function animate() {
 
 	if (!currentBlock) return;
 
-	if (onLeftCtrl) {
-		var currentWidth = Math.max(downX - event.clientX + blockOriginWith, utils.vh(4));
-		if (currentWidth >= utils.vh(4)) {
-			middleCtrl.style.left = '0px';
-			currentBlock.style.width = currentWidth + 'px';
-			currentBlock.style.left = event.clientX + ctrlLeftDelta + 'px';
-			var spanStart = event.clientX + ctrlLeftDelta + utils.vh(2)
-			marks.getActivedMark().span.start = spanStart;
-			marks.getActivedMark().span.loopStart = spanStart
-			updateVideo(spanStart);
-		}
-	}
-
-	if (onRightCtrl) {
-		currentBlock.style.width = Math.max(blockX + ctrlRightDelta, utils.vh(4)) + 'px';
-		var spanEnd = event.clientX - utils.vh(2) + ctrlRightDelta;;
-		marks.getActivedMark().span.end = spanEnd;
-		updateVideo(spanEnd);
-	}
-
-	if (onMiddleCtrl) {
-		middleCtrl.style.left = blockX - utils.vh(2) + 'px';
-		marks.getActivedMark().span.loopStart = event.clientX;
-		updateVideo(event.clientX);
-	}
-
-	if (action && action.isResizing) {
-		var rectLastLeft = parseInt(currentBlock.style.left);
-		var rectLastTop = parseInt(currentBlock.style.top);
-
-		if (action.onRightEdge) {
-			var width = Math.max(blockX, RECT_MIN_WH);
-			if (rectLastLeft + width > mobileScreenRect.width) {
-				width = mobileScreenRect.width - rectLastLeft;
+	if (whichBlock == BLOCK_TIME) {
+		if (onLeftCtrl) {
+			var currentWidth = Math.max(downX - event.clientX + blockOriginWith, utils.vh(4));
+			if (currentWidth >= utils.vh(4)) {
+				middleCtrl.style.left = '0px';
+				currentBlock.style.width = currentWidth + 'px';
+				currentBlock.style.left = event.clientX + ctrlLeftDelta + 'px';
+				var spanStart = event.clientX + ctrlLeftDelta + utils.vh(2)
+				marks.getActivedMark().span.start = spanStart;
+				marks.getActivedMark().span.loopStart = spanStart
+				updateVideo(spanStart);
 			}
-			currentBlock.style.width = width + 'px';
 		}
 
-		if (action.onBottomEdge) {
-			var height = Math.max(blockY, RECT_MIN_WH);
-			if (height + rectLastTop > mobileScreenRect.height) {
-				height = mobileScreenRect.height - rectLastTop;
-			}
-			currentBlock.style.height = height + 'px';
+		if (onRightCtrl) {
+			currentBlock.style.width = Math.max(blockX + ctrlRightDelta, utils.vh(4)) + 'px';
+			var spanEnd = event.clientX - utils.vh(2) + ctrlRightDelta;;
+			marks.getActivedMark().span.end = spanEnd;
+			updateVideo(spanEnd);
+		}
+
+		if (onMiddleCtrl) {
+			middleCtrl.style.left = blockX - utils.vh(2) + 'px';
+			marks.getActivedMark().span.loopStart = event.clientX;
+			updateVideo(event.clientX);
 		}
 	}
 
-	if (action && action.isMoving) {
-		var top = event.clientY - action.y;
-		var left = event.clientX - action.x;
-		var width = currentBlock.style.width == '' ? RECT_MIN_WH : parseInt(currentBlock.style.width);
-		var height = currentBlock.style.height == '' ? RECT_MIN_WH : parseInt(currentBlock.style.height);
+	if (whichBlock == BLOCK_SITE) {
 
-		if (top < 0) {
-			top = 0;
-		}
-		if (top + height > mobileScreenRect.height) {
-			top = mobileScreenRect.height - height;
-		}
-		currentBlock.style.top = top + 'px';
+		if (action && action.isResizing) {
+			var rectLastLeft = parseInt(currentBlock.style.left);
+			var rectLastTop = parseInt(currentBlock.style.top);
 
-		if (left < 0) {
-			left = 0;
+			if (action.onRightEdge) {
+				var width = Math.max(blockX, RECT_MIN_WH);
+				if (rectLastLeft + width > mobileScreenRect.width) {
+					width = mobileScreenRect.width - rectLastLeft;
+				}
+				currentBlock.style.width = width + 'px';
+			}
+
+			if (action.onBottomEdge) {
+				var height = Math.max(blockY, RECT_MIN_WH);
+				if (height + rectLastTop > mobileScreenRect.height) {
+					height = mobileScreenRect.height - rectLastTop;
+				}
+				currentBlock.style.height = height + 'px';
+			}
 		}
-		if (left + width > mobileScreenRect.width) {
-			left = mobileScreenRect.width - width;
+
+		if (action && action.isMoving) {
+			var top = event.clientY - action.y;
+			var left = event.clientX - action.x;
+			var width = currentBlock.style.width == '' ? RECT_MIN_WH : parseInt(currentBlock.style.width);
+			var height = currentBlock.style.height == '' ? RECT_MIN_WH : parseInt(currentBlock.style.height);
+
+			if (top < 0) {
+				top = 0;
+			}
+			if (top + height > mobileScreenRect.height) {
+				top = mobileScreenRect.height - height;
+			}
+			currentBlock.style.top = top + 'px';
+
+			if (left < 0) {
+				left = 0;
+			}
+			if (left + width > mobileScreenRect.width) {
+				left = mobileScreenRect.width - width;
+			}
+			currentBlock.style.left = left + 'px';
 		}
-		currentBlock.style.left = left + 'px';
 	}
 }
 
@@ -207,6 +210,7 @@ function addController(id, pageX) {
 	ctrl.css("left", pageX - utils.vh(2))
 
 	var rect = addRect(id);
+	showRect(id)
 
 	ctrl.dblclick(() => {
 		ctrl.remove();
@@ -226,6 +230,7 @@ function addController(id, pageX) {
 		blockOriginWith = blockBound.width;
 		ctrlLeftDelta = blockBound.left - e.clientX;
 		ctrlRightDelta = blockBound.right - e.clientX;
+		showRect(id);
 
 		e.preventDefault();
 	})
@@ -252,6 +257,18 @@ function addRect(id) {
 	rect.append(`<input type='checkbox' class='checkbox-bottom'></input>`);
 	rect.append(`<input type='checkbox' class='checkbox-center'></input>`);
 	return rect;
+}
+
+function showRect(id) {
+	var children = mobileScreen.children();
+	for (var i = 0; i < children.length; i++) {
+		var elem = children[i];
+		if (elem.id == `rect-${id}`) {
+			elem.style.display = 'block';
+		} else {
+			elem.style.display = 'none';
+		}
+	}
 }
 
 function setAction(e) {
