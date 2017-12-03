@@ -67,6 +67,10 @@ $(() => {
 		ipc.send('save-file', marks.getMarks())
 	});
 
+	$('#import').click(() => {
+		ipc.send('open-file');
+	})
+
 	$(window).resize(() => {
 		marks.reset();
 
@@ -79,6 +83,14 @@ $(() => {
 
 ipc.on('file-saved', (event, path) => {
 	console.log(path)
+})
+
+ipc.on('file-opend', (event, filename) => {
+	if(filename){
+		if (!video) video = $('.palyer')[0];
+		video.src = filename;
+		video.currentTime = 0;
+	}
 })
 
 function onTouchDown(e) {
@@ -192,6 +204,10 @@ function animate() {
 
 function onDown(e) {
 	if (e.target === progressBar[0]) {
+		if(!video) {
+			alert('请导入视频');
+			return;
+		}
 		addController(ctrlID++, e.pageX);
 		video = $(".palyer")[0];
 	}
@@ -211,6 +227,8 @@ function addController(id, pageX) {
 
 	var rect = addRect(id);
 	showRect(id)
+	currentBlock = progressBar;
+	updateVideo(pageX);
 
 	ctrl.dblclick(() => {
 		ctrl.remove();

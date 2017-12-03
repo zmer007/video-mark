@@ -7,9 +7,10 @@ ipc.on('save-file', (event, data) => {
     try {
         const options = {
             title: '保存可玩配置文件',
-            filters: [
-                { name: 'zprofile', extensions: ['zprof'] }
-            ]
+            filters: [{
+                name: 'zprofile',
+                extensions: ['zprof']
+            }]
         }
         dialog.showSaveDialog(options, function (filename) {
             if (filename) {
@@ -20,5 +21,23 @@ ipc.on('save-file', (event, data) => {
 
     } catch (e) {
         event.sender.send('file-saved', 'save file failed')
+    }
+})
+
+ipc.on('open-file', (event) => {
+    try {
+        const options = {
+            title: '选择可玩视频',
+            properties: ['openFile', 'openDirectory'],
+            filters: [{
+                name: 'Movies',
+                extensions: ['mkv', 'avi', 'mp4']
+            }]
+        }
+        dialog.showOpenDialog(options, (filename) => {
+            event.sender.send('file-opend', filename);
+        })
+    } catch (e) {
+        event.sender.send('file-opend');
     }
 })
