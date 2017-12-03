@@ -53,43 +53,33 @@ body {
 }
 
 .checkbox-left {
-    position: inherit;
+    position: relative;
     width: 2vh;
     height: 2vh;
-    margin-top: calc(50% - 1vh);
-    left: 0;
 }
 
 .checkbox-top {
-    position: inherit;
+    position: relative;
     width: 2vh;
     height: 2vh;
-    margin-left: calc(50% - 1vh);
-    top: 0;
 }
 
 .checkbox-right {
-    position: inherit;
+    position: relative;
     width: 2vh;
     height: 2vh;
-    margin-top: calc(50% - 1vw);
-    right: 0;
 }
 
 .checkbox-bottom {
-    position: inherit;
+    position: relative;
     width: 2vh;
     height: 2vh;
-    margin-left: calc(50% - 1vh);
-    bottom: 0;
 }
 
 .checkbox-center {
-    position: inherit;
+    position: relative;
     width: 2vh;
     height: 2vh;
-    margin-left: calc(50% - 1vh);
-    margin-top: calc(50% - 1vh);
 }
 
 .controller-container {

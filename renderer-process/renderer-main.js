@@ -7,6 +7,7 @@ const MARGIN = utils.vh(2);
 const RECT_MARGIN = utils.vh(1);
 const BLOCK_TIME = 1;
 const BLOCK_SITE = 2;
+var RECT_MIN_WH = utils.vh(10);
 
 var video = null
 
@@ -142,19 +143,47 @@ function animate() {
 	}
 
 	if (action && action.isResizing) {
-		var minHW = utils.vh(10);
+		var rectLastLeft = parseInt(currentBlock.style.left);
+		var rectLastTop = parseInt(currentBlock.style.top);
+
 		if (action.onRightEdge) {
-			currentBlock.style.width = Math.max(blockX, minHW) + 'px';
+			var width = Math.max(blockX, RECT_MIN_WH);
+			if (rectLastLeft + width > mobileScreenRect.width) {
+				width = mobileScreenRect.width - rectLastLeft;
+			}
+			currentBlock.style.width = width + 'px';
 		}
 
 		if (action.onBottomEdge) {
-			currentBlock.style.height = Math.max(blockY, minHW) + 'px';
+			var height = Math.max(blockY, RECT_MIN_WH);
+			if (height + rectLastTop > mobileScreenRect.height) {
+				height = mobileScreenRect.height - rectLastTop;
+			}
+			currentBlock.style.height = height + 'px';
 		}
 	}
 
 	if (action && action.isMoving) {
-		currentBlock.style.top = (event.clientY - action.y) + 'px';
-		currentBlock.style.left = (event.clientX - action.x) + 'px';
+		var top = event.clientY - action.y;
+		var left = event.clientX - action.x;
+		var width = currentBlock.style.width == '' ? RECT_MIN_WH : parseInt(currentBlock.style.width);
+		var height = currentBlock.style.height == '' ? RECT_MIN_WH : parseInt(currentBlock.style.height);
+
+		if (top < 0) {
+			top = 0;
+		}
+		if (top + height > mobileScreenRect.height) {
+			top = mobileScreenRect.height - height;
+		}
+		currentBlock.style.top = top + 'px';
+
+		if (left < 0) {
+			left = 0;
+		}
+		if (left + width > mobileScreenRect.width) {
+			left = mobileScreenRect.width - width;
+		}
+		currentBlock.style.left = left + 'px';
 	}
 }
 
@@ -215,7 +244,7 @@ function addController(id, pageX) {
 }
 
 function addRect(id) {
-	mobileScreen.append(`<div id='rect-${id}' class='rectangle'></div>`);
+	mobileScreen.append(`<div id='rect-${id}' class='rectangle' style="left: 0; top: 0; " ></div>`);
 	var rect = $(`#rect-${id}`);
 	rect.append(`<input type='checkbox' class='checkbox-left'></input>`);
 	rect.append(`<input type='checkbox' class='checkbox-top'></input>`);
