@@ -8,6 +8,25 @@ body {
     background: #222;
 }
 
+span {
+    font-size: 1.5vh;
+    color: #ffffff;
+    text-shadow: 5px 5px 5px #222222;
+}
+
+h3 {
+    color: #ffffff;
+}
+
+span {
+    color: #ffffff;
+}
+
+button {
+    height: 3vh;
+    margin: 4px;
+}
+
 .mobile-frame {
     position: absolute;
     width: 47vh;
@@ -15,12 +34,12 @@ body {
     margin-left: calc(50vw - 23.5vh);
     border: 2px solid;
     border-radius: 10px;
+    margin-top: 3vh;
     background: white;
 }
 
 
 /* 16 : 9 的屏幕 */
-
 .mobile-screen {
     position: absolute;
     width: 45vh;
@@ -29,7 +48,7 @@ body {
     background: #0585ee;
 }
 
-.palyer {
+.player {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -39,44 +58,19 @@ body {
     position: inherit;
     width: 100%;
     height: 100%;
-    /* background: black; */
     z-index: 100;
 }
 
 .rectangle {
     position: absolute;
-    width: 10vh;
-    height: 10vh;
+    width: 12vh;
+    height: 12vh;
     border: 1vh solid;
     border-color: #0585ee;
     box-sizing: border-box;
 }
 
-.checkbox-left {
-    position: relative;
-    width: 2vh;
-    height: 2vh;
-}
-
-.checkbox-top {
-    position: relative;
-    width: 2vh;
-    height: 2vh;
-}
-
-.checkbox-right {
-    position: relative;
-    width: 2vh;
-    height: 2vh;
-}
-
-.checkbox-bottom {
-    position: relative;
-    width: 2vh;
-    height: 2vh;
-}
-
-.checkbox-center {
+.checkbox{
     position: relative;
     width: 2vh;
     height: 2vh;
@@ -85,8 +79,8 @@ body {
 .controller-container {
     position: absolute;
     width: 100vw;
-    height: 20vh;
-    margin-top: 85vh;
+    height: 15vh;
+    margin-top: 90vh;
     background-color: #222;
 }
 
@@ -94,7 +88,7 @@ body {
     position: absolute;
     width: 90%;
     height: 3vh;
-    margin-top: 6vh;
+    margin-top: 3vh;
     margin-left: 5vw;
     background: #3bb4c1;
     box-sizing: border-box;
@@ -104,7 +98,6 @@ body {
     position: absolute;
     width: 4vh;
     height: 10vh;
-    margin-top: 3vh;
 }
 
 .controller-container .ctrl .middle {

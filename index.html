@@ -10,20 +10,27 @@
 </head>
 
 <body>
-    <div>
-        <p>
-            <button id='import'>导入视频文件</button>
-        </p>
-        <p>
-            <button id="export">导出配制文件</button>
-        </p>
+    <div style="position:absolute">
+        <button id='import'>导入视频文件</button>
+        <button id="export">导出配制文件</button>
+        <br><br>
+        <h3>控制点说明：</h3>
+        <input type="checkbox" /> <span>左上</span>
+        <input type="checkbox" /> <span>上滑</span>
+        <input type="checkbox" /> <span>右上</span><br>
+        <input type="checkbox" /> <span>左滑</span>
+        <input type="checkbox" /> <span>点击</span>
+        <input type="checkbox" /> <span>右滑</span><br>
+        <input type="checkbox" /> <span>左下</span>
+        <input type="checkbox" /> <span>下滑</span>
+        <input type="checkbox" /> <span>右下</span>
+        <br>
     </div>
 
     <div class="mobile-frame">
         <div class="mobile-screen">
-            <video class="palyer"></video>
-            <div class="rectangle-container">
-            </div>
+            <video class="player" src="./assets/tmp/small.mp4"></video>
+            <div class="rectangle-container"></div>
         </div>
     </div>
     <div class="controller-container">

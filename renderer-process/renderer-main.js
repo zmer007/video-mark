@@ -7,7 +7,7 @@ const MARGIN = utils.vh(2);
 const RECT_MARGIN = utils.vh(1);
 const BLOCK_TIME = 1;
 const BLOCK_SITE = 2;
-var RECT_MIN_WH = utils.vh(10);
+var RECT_MIN_WH = utils.vh(12);
 
 var video = null
 
@@ -54,6 +54,8 @@ $(() => {
 	mobileScreen = $('.rectangle-container');
 	mobileScreenRect = mobileScreen[0].getBoundingClientRect();
 
+	video = $('.player')[0];
+
 	progressBar.on('mousedown', onDown);
 	$(document).on('mousemove', onMove);
 	$(document).on('mouseup', onUp);
@@ -78,6 +80,12 @@ $(() => {
 		for (var i = 0; i < children.length; i++) {
 			children[i].remove();
 		}
+		children = $('.rectangle-container').children();
+		for (var i = 0; i< children.length; i++) {
+			children[i].remove();
+		}
+		
+		video.currentTime = 0;
 	})
 })
 
@@ -86,8 +94,8 @@ ipc.on('file-saved', (event, path) => {
 })
 
 ipc.on('file-opend', (event, filename) => {
-	if(filename){
-		if (!video) video = $('.palyer')[0];
+	if (filename) {
+		if (!video) video = $('.player')[0];
 		video.src = filename;
 		video.currentTime = 0;
 	}
@@ -166,6 +174,7 @@ function animate() {
 					width = mobileScreenRect.width - rectLastLeft;
 				}
 				currentBlock.style.width = width + 'px';
+				marks.setActiveEventBlock(rectLastLeft, rectLastTop, rectLastLeft + width, -1);
 			}
 
 			if (action.onBottomEdge) {
@@ -174,6 +183,7 @@ function animate() {
 					height = mobileScreenRect.height - rectLastTop;
 				}
 				currentBlock.style.height = height + 'px';
+				marks.setActiveEventBlock(rectLastLeft, rectLastTop, -1, rectLastTop + height);
 			}
 		}
 
@@ -198,18 +208,19 @@ function animate() {
 				left = mobileScreenRect.width - width;
 			}
 			currentBlock.style.left = left + 'px';
+			marks.setActiveEventBlock(left, top, left + width, top + height);
 		}
 	}
 }
 
 function onDown(e) {
 	if (e.target === progressBar[0]) {
-		if(!video) {
-			alert('请导入视频');
-			return;
-		}
+		// if(!video) {
+		// 	alert('请导入视频');
+		// 	return;
+		// }
 		addController(ctrlID++, e.pageX);
-		video = $(".palyer")[0];
+		video = $(".player")[0];
 	}
 }
 
@@ -225,9 +236,16 @@ function addController(id, pageX) {
 	ctrl.find('.right').append(`<div class='line'></div>`)
 	ctrl.css("left", pageX - utils.vh(2))
 
+	marks.add(id);
+	marks.setActivemark(id);
+	marks.getActivedMark().span.start = pageX;
+	marks.getActivedMark().span.loopStart = pageX;
+	marks.getActivedMark().span.end = pageX;
+
 	var rect = addRect(id);
 	showRect(id)
-	currentBlock = progressBar;
+	
+	currentBlock = progressBar[0];
 	updateVideo(pageX);
 
 	ctrl.dblclick(() => {
@@ -255,25 +273,32 @@ function addController(id, pageX) {
 
 	rect.on(`mousedown`, (e) => {
 		whichBlock = BLOCK_SITE;
-		currentBlock = e.target;
+		currentBlock = rect[0];
 		downX = e.clientX;
 
 		setAction(e);
 
 		e.preventDefault();
 	})
-
-	marks.add(id);
 }
 
 function addRect(id) {
 	mobileScreen.append(`<div id='rect-${id}' class='rectangle' style="left: 0; top: 0; " ></div>`);
 	var rect = $(`#rect-${id}`);
-	rect.append(`<input type='checkbox' class='checkbox-left'></input>`);
-	rect.append(`<input type='checkbox' class='checkbox-top'></input>`);
-	rect.append(`<input type='checkbox' class='checkbox-right'></input>`);
-	rect.append(`<input type='checkbox' class='checkbox-bottom'></input>`);
-	rect.append(`<input type='checkbox' class='checkbox-center'></input>`);
+	for (var i=0; i<9; i++){
+		rect.append(`<input id='rcb-${i}-${id}' type='checkbox' class='checkbox'/>`)
+		if (i == 2 || i == 5) {
+			rect.append(`<br>`)
+		}
+
+		rect.find(`#rcb-${i}-${id}`).change( function() {
+			var ary = this.id.split('-');
+			var state = this.checked ? 1 : 0;
+			marks.setActiveAction(ary[1], state);				
+		})
+	}
+
+	marks.setActiveEventBlock(0, 0, rect.width(), rect.height());
 	return rect;
 }
 
@@ -314,7 +339,6 @@ function canMove() {
 
 function calc(e) {
 	if (!currentBlock) return;
-
 	blockBound = currentBlock.getBoundingClientRect();
 	blockX = e.clientX - blockBound.left;
 	blockY = e.clientY - blockBound.top;
