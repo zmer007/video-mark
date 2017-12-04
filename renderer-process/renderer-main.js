@@ -1,4 +1,5 @@
 const ipc = require('electron').ipcRenderer
+const shell = require('electron').shell
 const $ = require('jquery')
 var utils = require('./utils')
 var marks = require('./mark')
@@ -66,7 +67,7 @@ $(() => {
 
 
 	$('#export').click(() => {
-		ipc.send('save-file', marks.getMarks())
+		ipc.send('save-file', marks.normalAllMarks(mobileScreenRect.width, mobileScreenRect.height, progressBarRect.width, video.duration))
 	});
 
 	$('#import').click(() => {
@@ -81,16 +82,18 @@ $(() => {
 			children[i].remove();
 		}
 		children = $('.rectangle-container').children();
-		for (var i = 0; i< children.length; i++) {
+		for (var i = 0; i < children.length; i++) {
 			children[i].remove();
 		}
-		
+
 		video.currentTime = 0;
 	})
 })
 
 ipc.on('file-saved', (event, path) => {
-	console.log(path)
+	if (confirm('文件已保存，是否打开保存位置？')) {
+		shell.showItemInFolder(path)
+	}
 })
 
 ipc.on('file-opend', (event, filename) => {
@@ -142,8 +145,8 @@ function animate() {
 				currentBlock.style.width = currentWidth + 'px';
 				currentBlock.style.left = event.clientX + ctrlLeftDelta + 'px';
 				var spanStart = event.clientX + ctrlLeftDelta + utils.vh(2)
-				marks.getActivedMark().span.start = spanStart;
-				marks.getActivedMark().span.loopStart = spanStart
+				marks.getActivedMark().span.start = spanStart - progressBarRect.left;
+				marks.getActivedMark().span.loopStart = spanStart - progressBarRect.left;
 				updateVideo(spanStart);
 			}
 		}
@@ -151,13 +154,13 @@ function animate() {
 		if (onRightCtrl) {
 			currentBlock.style.width = Math.max(blockX + ctrlRightDelta, utils.vh(4)) + 'px';
 			var spanEnd = event.clientX - utils.vh(2) + ctrlRightDelta;;
-			marks.getActivedMark().span.end = spanEnd;
+			marks.getActivedMark().span.end = spanEnd - progressBarRect.left;
 			updateVideo(spanEnd);
 		}
 
 		if (onMiddleCtrl) {
 			middleCtrl.style.left = blockX - utils.vh(2) + 'px';
-			marks.getActivedMark().span.loopStart = event.clientX;
+			marks.getActivedMark().span.loopStart = event.clientX - progressBarRect.left;
 			updateVideo(event.clientX);
 		}
 	}
@@ -215,10 +218,10 @@ function animate() {
 
 function onDown(e) {
 	if (e.target === progressBar[0]) {
-		// if(!video) {
-		// 	alert('请导入视频');
-		// 	return;
-		// }
+		if(!video || isNaN(video.duration)) {
+			alert('请导入视频');
+			return;
+		}
 		addController(ctrlID++, e.pageX);
 		video = $(".player")[0];
 	}
@@ -238,13 +241,14 @@ function addController(id, pageX) {
 
 	marks.add(id);
 	marks.setActivemark(id);
-	marks.getActivedMark().span.start = pageX;
-	marks.getActivedMark().span.loopStart = pageX;
-	marks.getActivedMark().span.end = pageX;
+	var v = pageX - progressBarRect.left;
+	marks.getActivedMark().span.start = v;
+	marks.getActivedMark().span.loopStart = v;
+	marks.getActivedMark().span.end = v;
 
 	var rect = addRect(id);
 	showRect(id)
-	
+
 	currentBlock = progressBar[0];
 	updateVideo(pageX);
 
@@ -285,16 +289,16 @@ function addController(id, pageX) {
 function addRect(id) {
 	mobileScreen.append(`<div id='rect-${id}' class='rectangle' style="left: 0; top: 0; " ></div>`);
 	var rect = $(`#rect-${id}`);
-	for (var i=0; i<9; i++){
+	for (var i = 0; i < 9; i++) {
 		rect.append(`<input id='rcb-${i}-${id}' type='checkbox' class='checkbox'/>`)
 		if (i == 2 || i == 5) {
 			rect.append(`<br>`)
 		}
 
-		rect.find(`#rcb-${i}-${id}`).change( function() {
+		rect.find(`#rcb-${i}-${id}`).change(function () {
 			var ary = this.id.split('-');
 			var state = this.checked ? 1 : 0;
-			marks.setActiveAction(ary[1], state);				
+			marks.setActiveAction(ary[1], state);
 		})
 	}
 

@@ -23,8 +23,11 @@ span {
 }
 
 button {
+    font-size: 0.8em;
     height: 3vh;
     margin: 4px;
+    padding: 5px;
+    box-sizing: border-box;
 }
 
 .mobile-frame {

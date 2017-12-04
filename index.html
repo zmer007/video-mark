@@ -10,10 +10,10 @@
 </head>
 
 <body>
-    <div style="position:absolute">
+    <div style="position:absolute; padding:2vh">
         <button id='import'>导入视频文件</button>
         <button id="export">导出配制文件</button>
-        <br><br>
+        <br>
         <h3>控制点说明：</h3>
         <input type="checkbox" /> <span>左上</span>
         <input type="checkbox" /> <span>上滑</span>
@@ -25,11 +25,13 @@
         <input type="checkbox" /> <span>下滑</span>
         <input type="checkbox" /> <span>右下</span>
         <br>
+
+        <button style="margin:2vh 0" onclick="refresh()">清空</button>
     </div>
 
     <div class="mobile-frame">
         <div class="mobile-screen">
-            <video class="player" src="./assets/tmp/small.mp4"></video>
+            <video class="player"></video>
             <div class="rectangle-container"></div>
         </div>
     </div>
@@ -40,6 +42,10 @@
     <script>
         require('./renderer-process/native-ui/dialogs/open-file')
         require('./renderer-process/renderer-main')
+
+        function refresh(){
+            location.reload();
+        }
     </script>
 </body>
 

@@ -65,6 +65,20 @@ function getAllMarks() {
     return marks;
 }
 
+function normalAllMarks(screenWidth, screenHeight, progressBarWidth) {
+    for (var i = 0; i< marks.length; i++){
+        var mark = marks[i];
+        mark.span.start /= progressBarWidth;
+        mark.span.loopStart /= progressBarWidth;
+        mark.span.end /= progressBarWidth;
+        mark.event[0].block[0] /= screenWidth;
+        mark.event[0].block[1] /= screenHeight;
+        mark.event[0].block[2] /= screenWidth;
+        mark.event[0].block[3] /= screenHeight;
+    }
+    return marks;
+}
+
 function getMark(id) {
     return marks.getById(id);
 }
@@ -102,6 +116,7 @@ module.exports = {
     remove: removeMark,
     reset: reset,
     getMarks: getAllMarks,
+    normalAllMarks: normalAllMarks,
     setActiveEventBlock: setActiveEventBlock,
     setActiveAction: setActiveAction,
 }
