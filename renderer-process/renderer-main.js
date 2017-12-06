@@ -61,13 +61,35 @@ $(() => {
 	$(document).on('mousemove', onMove);
 	$(document).on('mouseup', onUp);
 
-	progressBar.on('touchdown', onTouchDown);
+	progressBar.on('touchstart', onTouchDown);
 	$(document).on('touchmove', onTouchMove);
-	$(document).on('touchen', onTouchEnd);
+	$(document).on('touchend', onTouchEnd);
 
+	$('#pre-play').click(() => {
+		var text = $('#pre-play').text();
+		video.currentTime = 0;
+		if (text == '预演') {
+			$('#pre-play').html('调整');
+			progressBar[0].style.display = 'none';
+			mobileScreen[0].style.display = 'none';
+			hideAllCtrl();
+
+			$('#gesture-layer')[0].style.display = 'block';
+			var nm = getNormaledMarks();
+			ipc.send('cache-file', 'tmpData.json', getNormaledMarks())
+		} else {
+			$('#pre-play').html('预演');
+			progressBar[0].style.display = 'block';
+			mobileScreen[0].style.display = 'block';
+			showAllCtrl();
+
+			$('#gesture-layer')[0].style.display = 'none';
+			video.pause();
+		}
+	})
 
 	$('#export').click(() => {
-		ipc.send('save-file', marks.normalAllMarks(mobileScreenRect.width, mobileScreenRect.height, progressBarRect.width, video.duration))
+		ipc.send('save-file', getNormaledMarks())
 	});
 
 	$('#import').click(() => {
@@ -103,6 +125,10 @@ ipc.on('file-opend', (event, filename) => {
 		video.currentTime = 0;
 	}
 })
+
+function getNormaledMarks() {
+	return marks.getNormaledMarks(mobileScreenRect.width, mobileScreenRect.height, progressBarRect.width, video.duration);
+}
 
 function onTouchDown(e) {
 	onDown(e.touches[0]);
@@ -154,7 +180,7 @@ function animate() {
 		if (onRightCtrl) {
 			currentBlock.style.width = Math.max(blockX + ctrlRightDelta, utils.vh(4)) + 'px';
 			var spanEnd = event.clientX - utils.vh(2) + ctrlRightDelta;;
-			marks.getActivedMark().span.end = spanEnd - progressBarRect.left;
+			marks.getActivedMark().span.end = Math.floor(spanEnd - progressBarRect.left);
 			updateVideo(spanEnd);
 		}
 
@@ -218,12 +244,26 @@ function animate() {
 
 function onDown(e) {
 	if (e.target === progressBar[0]) {
-		if(!video || isNaN(video.duration)) {
+		if (!video || isNaN(video.duration)) {
 			alert('请导入视频');
 			return;
 		}
 		addController(ctrlID++, e.pageX);
 		video = $(".player")[0];
+	}
+}
+
+function hideAllCtrl() {
+	var children = $('.controller-container').children();
+	for (var i = 0; i < children.length; i++) {
+		children[i].style.display = 'none';
+	}
+}
+
+function showAllCtrl() {
+	var children = $('.controller-container').children();
+	for (var i = 0; i < children.length; i++) {
+		children[i].style.display = 'block';
 	}
 }
 

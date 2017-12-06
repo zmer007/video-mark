@@ -8,8 +8,8 @@ ipc.on('save-file', (event, data) => {
         const options = {
             title: '保存可玩配置文件',
             filters: [{
-                name: 'zprofile',
-                extensions: ['zprof']
+                name: 'zprf',
+                extensions: ['json']
             }]
         }
         dialog.showSaveDialog(options, function (filename) {
@@ -39,5 +39,12 @@ ipc.on('open-file', (event) => {
         })
     } catch (e) {
         event.sender.send('file-opend');
+    }
+})
+
+ipc.on('cache-file', (event, filename, data) => {
+    if (filename && data) {
+        fs.writeFileSync(filename, JSON.stringify(data), 'utf-8');
+        event.sender.send('file-cached', filename);
     }
 })

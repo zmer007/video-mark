@@ -18,9 +18,7 @@ function setActiveEventBlock(l, t, r, b) {
 
 function setActiveAction(position, state) {
     if (position < 0 || position > 8 ) return;
-    var act = activeMark.event[0].action.split('');
-    act[position] = state;
-    activeMark.event[0].action = act.join('');
+    activeMark.event[0].action[position] = parseInt(state);
 }
 
 function reset() {
@@ -52,7 +50,7 @@ function mark(id) {
             // 1: 向左上滑动  2：向上滑动  3：向右上滑动
             // 4: 向左滑动    5：点击     6：向右滑动
             // 7: 向左下滑动  8：向下滑动  9：向右下滑动
-            action: '000000000'
+            action: [0, 0, 0, 0, 0, 0, 0, 0, 0]
         }]
     };
 }
@@ -66,17 +64,21 @@ function getAllMarks() {
 }
 
 function normalAllMarks(screenWidth, screenHeight, progressBarWidth) {
+    var ms = [];
     for (var i = 0; i< marks.length; i++){
-        var mark = marks[i];
-        mark.span.start /= progressBarWidth;
-        mark.span.loopStart /= progressBarWidth;
-        mark.span.end /= progressBarWidth;
-        mark.event[0].block[0] /= screenWidth;
-        mark.event[0].block[1] /= screenHeight;
-        mark.event[0].block[2] /= screenWidth;
-        mark.event[0].block[3] /= screenHeight;
+        var mk = marks[i];
+        var m = mark(mk.id);
+        m.span.start = mk.span.start / progressBarWidth;
+        m.span.loopStart = mk.span.loopStart / progressBarWidth;
+        m.span.end = mk.span.end / progressBarWidth;
+        m.event[0].block[0] = mk.event[0].block[0] / screenWidth;
+        m.event[0].block[1] = mk.event[0].block[1] / screenHeight;
+        m.event[0].block[2] = mk.event[0].block[2] / screenWidth;
+        m.event[0].block[3] = mk.event[0].block[3] / screenHeight;
+        m.event[0].action = mk.event[0].action;
+        ms.push(m);
     }
-    return marks;
+    return ms;  
 }
 
 function getMark(id) {
@@ -116,7 +118,7 @@ module.exports = {
     remove: removeMark,
     reset: reset,
     getMarks: getAllMarks,
-    normalAllMarks: normalAllMarks,
+    getNormaledMarks: normalAllMarks,
     setActiveEventBlock: setActiveEventBlock,
     setActiveAction: setActiveAction,
 }
