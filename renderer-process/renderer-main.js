@@ -89,7 +89,7 @@ $(() => {
 	})
 
 	$('#export').click(() => {
-		ipc.send('save-file', getNormaledMarks())
+		ipc.send('save-file', getMarksJsString())
 	});
 
 	$('#import').click(() => {
@@ -128,6 +128,10 @@ ipc.on('file-opend', (event, filename) => {
 
 function getNormaledMarks() {
 	return marks.getNormaledMarks(mobileScreenRect.width, mobileScreenRect.height, progressBarRect.width, video.duration);
+}
+
+function getMarksJsString(){
+	return marks.getMarksJsFile(mobileScreenRect.width, mobileScreenRect.height, progressBarRect.width, video.duration);
 }
 
 function onTouchDown(e) {

@@ -81,6 +81,25 @@ function normalAllMarks(screenWidth, screenHeight, progressBarWidth) {
     return ms;  
 }
 
+function marks2jsfile(screenWidth, screenHeight, progressBarWidth) {
+    var ms = [];
+    for (var i = 0; i< marks.length; i++){
+        var mk = marks[i];
+        var m = mark(mk.id);
+        m.span.start = mk.span.start / progressBarWidth;
+        m.span.loopStart = mk.span.loopStart / progressBarWidth;
+        m.span.end = mk.span.end / progressBarWidth;
+        m.event[0].block[0] = mk.event[0].block[0] / screenWidth;
+        m.event[0].block[1] = mk.event[0].block[1] / screenHeight;
+        m.event[0].block[2] = mk.event[0].block[2] / screenWidth;
+        m.event[0].block[3] = mk.event[0].block[3] / screenHeight;
+        m.event[0].action = mk.event[0].action;
+        ms.push(m);
+    }
+    var jsFile = 'data = ' + JSON.stringify(ms);
+    return jsFile;  
+}
+
 function getMark(id) {
     return marks.getById(id);
 }
@@ -119,6 +138,7 @@ module.exports = {
     reset: reset,
     getMarks: getAllMarks,
     getNormaledMarks: normalAllMarks,
+    getMarksJsFile: marks2jsfile,
     setActiveEventBlock: setActiveEventBlock,
     setActiveAction: setActiveAction,
 }

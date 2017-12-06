@@ -9,12 +9,12 @@ ipc.on('save-file', (event, data) => {
             title: '保存可玩配置文件',
             filters: [{
                 name: 'zprf',
-                extensions: ['json']
+                extensions: ['js']
             }]
         }
         dialog.showSaveDialog(options, function (filename) {
             if (filename) {
-                fs.writeFileSync(filename, JSON.stringify(data), 'utf-8');
+                fs.writeFileSync(filename, data, 'utf-8');
                 event.sender.send('file-saved', filename);
             }
         })
