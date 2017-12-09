@@ -77,6 +77,10 @@ $(() => {
 	$('#pre-play').click(() => {
 		var text = $('#pre-play').text();
 		video.currentTime = 0;
+		if (!video || isNaN(video.duration)) {
+			importVideo();
+			return;
+		}
 		if (text == '预演') {
 			$('#pre-play').html('调整');
 			progressBar[0].style.display = 'none';
@@ -256,11 +260,17 @@ function animate() {
 function onDown(e) {
 	if (e.target === progressBar[0]) {
 		if (!video || isNaN(video.duration)) {
-			alert('请导入视频');
+			importVideo()
 			return;
 		}
 		addController(ctrlID++, e.pageX);
 		video = $(".player")[0];
+	}
+}
+
+function importVideo(){
+	if (confirm('请先导入视频')) {
+		ipc.send('open-file');
 	}
 }
 
