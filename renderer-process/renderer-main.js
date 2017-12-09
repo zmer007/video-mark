@@ -56,6 +56,15 @@ $(() => {
 	mobileScreenRect = mobileScreen[0].getBoundingClientRect();
 
 	video = $('.player')[0];
+	video.onloadedmetadata = (e) => {
+		if (video.videoHeight < video.videoWidth){
+			$('#mobile-frame')[0].className = 'mobile-frame-landscape';
+			$('#mobile-screen-frame')[0].className = 'mobile-screen-landscape-16-9';
+		} else {
+			$('#mobile-frame')[0].className = 'mobile-frame-portrait';
+			$('#mobile-screen-frame')[0].className = 'mobile-screen-portrait-16-9';
+		}
+	}
 
 	progressBar.on('mousedown', onDown);
 	$(document).on('mousemove', onMove);
@@ -196,7 +205,6 @@ function animate() {
 	}
 
 	if (whichBlock == BLOCK_SITE) {
-
 		if (action && action.isResizing) {
 			var rectLastLeft = parseInt(currentBlock.style.left);
 			var rectLastTop = parseInt(currentBlock.style.top);
@@ -225,7 +233,6 @@ function animate() {
 			var left = event.clientX - action.x;
 			var width = currentBlock.style.width == '' ? RECT_MIN_WH : parseInt(currentBlock.style.width);
 			var height = currentBlock.style.height == '' ? RECT_MIN_WH : parseInt(currentBlock.style.height);
-
 			if (top < 0) {
 				top = 0;
 			}

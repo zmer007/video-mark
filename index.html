@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="./assets/css/style.css">
     <link rel="stylesheet" href="./assets/css/client-style.css">
+    <link rel="stylesheet" href="./assets/css/screen.css">
     <title>Document</title>
 </head>
 
@@ -31,9 +32,9 @@
         <button style="margin:2vh 0" onclick="refresh()">清空</button>
     </div>
 
-    <div class="mobile-frame">
-        <div class="mobile-screen">
-            <video id="my-video" class="player" src="small.mp4"></video>
+    <div id="mobile-frame" class="mobile-frame-portrait">
+        <div id="mobile-screen-frame" class="mobile-screen-portrait-16-9">
+            <video id="my-video" class="player"></video>
             <div class="rectangle-container"></div>
             <div id="gesture-layer" style="display:none"><span id="log-text">log</span></div>
         </div>

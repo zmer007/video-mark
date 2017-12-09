@@ -1,5 +1,6 @@
 var marks = [];
 var activeMark = null;
+var screenOrientation = null;
 
 function setActiveMark(id) {
     activeMark = marks.getById(id);
@@ -17,7 +18,7 @@ function setActiveEventBlock(l, t, r, b) {
 }
 
 function setActiveAction(position, state) {
-    if (position < 0 || position > 8 ) return;
+    if (position < 0 || position > 8) return;
     activeMark.event[0].action[position] = parseInt(state);
 }
 
@@ -65,7 +66,7 @@ function getAllMarks() {
 
 function normalAllMarks(screenWidth, screenHeight, progressBarWidth) {
     var ms = [];
-    for (var i = 0; i< marks.length; i++){
+    for (var i = 0; i < marks.length; i++) {
         var mk = marks[i];
         var m = mark(mk.id);
         m.span.start = mk.span.start / progressBarWidth;
@@ -78,30 +79,47 @@ function normalAllMarks(screenWidth, screenHeight, progressBarWidth) {
         m.event[0].action = mk.event[0].action;
         ms.push(m);
     }
-    return ms;  
+    return ms;
 }
 
 function marks2jsfile(screenWidth, screenHeight, progressBarWidth) {
     var ms = [];
-    for (var i = 0; i< marks.length; i++){
+    var isPortrait = screenOrientation == "portrait";
+
+    for (var i = 0; i < marks.length; i++) {
         var mk = marks[i];
         var m = mark(mk.id);
         m.span.start = mk.span.start / progressBarWidth;
         m.span.loopStart = mk.span.loopStart / progressBarWidth;
         m.span.end = mk.span.end / progressBarWidth;
-        m.event[0].block[0] = mk.event[0].block[0] / screenWidth;
-        m.event[0].block[1] = mk.event[0].block[1] / screenHeight;
-        m.event[0].block[2] = mk.event[0].block[2] / screenWidth;
-        m.event[0].block[3] = mk.event[0].block[3] / screenHeight;
+        var blc = [mk.event[0].block[0], mk.event[0].block[1], mk.event[0].block[2], mk.event[0].block[3]];
+        blc[0] = blc[0] / screenWidth;
+        blc[1] = blc[1] / screenHeight;
+        blc[2] = blc[2] / screenWidth;
+        blc[3] = blc[3] / screenHeight;
+        m.event[0].block = isPortrait ? blc : landCoor2portCoor(blc);
         m.event[0].action = mk.event[0].action;
         ms.push(m);
     }
-    var jsFile = 'data = ' + JSON.stringify(ms);
-    return jsFile;  
+
+    var data = {
+        screenOrientation: screenOrientation,
+        ctrl: ms
+    }
+    var jsFile = 'data = ' + JSON.stringify(data);
+    return jsFile;
+}
+
+function landCoor2portCoor(landCoor) {
+    return [1 - landCoor[3], landCoor[0], 1 - landCoor[1], landCoor[2]];
 }
 
 function getMark(id) {
     return marks.getById(id);
+}
+
+function setOrientation(orientation) {
+    screenOrientation = orientation;
 }
 
 Array.prototype.remove = function (id) {
@@ -141,4 +159,5 @@ module.exports = {
     getMarksJsFile: marks2jsfile,
     setActiveEventBlock: setActiveEventBlock,
     setActiveAction: setActiveAction,
+    setOrientation: setOrientation,
 }

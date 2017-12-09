@@ -32,27 +32,6 @@ button {
     box-sizing: border-box;
 }
 
-.mobile-frame {
-    position: absolute;
-    width: 47vh;
-    height: 84vh;
-    margin-left: calc(50vw - 23.5vh);
-    border: 2px solid;
-    border-radius: 10px;
-    margin-top: 3vh;
-    background: white;
-}
-
-
-/* 16 : 9 的屏幕 */
-.mobile-screen {
-    position: absolute;
-    width: 45vh;
-    height: 80vh;
-    margin: 1vh 3vh 1vh 1vh;
-    background: #0585ee;
-}
-
 .player {
     position: absolute;
     width: 100%;
