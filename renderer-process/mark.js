@@ -82,7 +82,7 @@ function normalAllMarks(screenWidth, screenHeight, progressBarWidth) {
     return ms;
 }
 
-function marks2jsfile(screenWidth, screenHeight, progressBarWidth) {
+function marks2jsfile(screenWidth, screenHeight, progressBarWidth, videoDuration) {
     var ms = [];
     var isPortrait = screenOrientation == "portrait";
 
@@ -104,6 +104,7 @@ function marks2jsfile(screenWidth, screenHeight, progressBarWidth) {
 
     var data = {
         screenOrientation: screenOrientation,
+        videoDuration: videoDuration,
         ctrl: ms
     }
     var jsFile = 'data = ' + JSON.stringify(data);

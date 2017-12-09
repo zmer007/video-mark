@@ -140,7 +140,7 @@ ipc.on('file-opend', (event, filename) => {
 })
 
 function getNormaledMarks() {
-	return marks.getNormaledMarks(mobileScreenRect.width, mobileScreenRect.height, progressBarRect.width, video.duration);
+	return marks.getNormaledMarks(mobileScreenRect.width, mobileScreenRect.height, progressBarRect.width);
 }
 
 function getMarksJsString(){
