@@ -64,6 +64,8 @@ $(() => {
 			$('#mobile-frame')[0].className = 'mobile-frame-portrait';
 			$('#mobile-screen-frame')[0].className = 'mobile-screen-portrait-16-9';
 		}
+		mobileScreen = $('.rectangle-container');
+		mobileScreenRect = mobileScreen[0].getBoundingClientRect();
 	}
 
 	progressBar.on('mousedown', onDown);
