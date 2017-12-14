@@ -47,6 +47,8 @@ var redraw = false;
 
 var action = null;
 
+var videoPath = null;
+
 $(() => {
 
 	progressBar = $('.progress-bar');
@@ -60,9 +62,11 @@ $(() => {
 		if (video.videoHeight < video.videoWidth){
 			$('#mobile-frame')[0].className = 'mobile-frame-landscape';
 			$('#mobile-screen-frame')[0].className = 'mobile-screen-landscape-16-9';
+			marks.setOrientation('landscape');
 		} else {
 			$('#mobile-frame')[0].className = 'mobile-frame-portrait';
 			$('#mobile-screen-frame')[0].className = 'mobile-screen-portrait-16-9';
+			marks.setOrientation('portrait')
 		}
 		mobileScreen = $('.rectangle-container');
 		mobileScreenRect = mobileScreen[0].getBoundingClientRect();
@@ -104,7 +108,7 @@ $(() => {
 	})
 
 	$('#export').click(() => {
-		ipc.send('save-file', getMarksJsString())
+		ipc.send('save-file', getMarksJsString(), videoPath)
 	});
 
 	$('#import').click(() => {
@@ -134,6 +138,7 @@ ipc.on('file-saved', (event, path) => {
 })
 
 ipc.on('file-opend', (event, filename) => {
+	videoPath = filename;
 	if (filename) {
 		if (!video) video = $('.player')[0];
 		video.src = filename;
